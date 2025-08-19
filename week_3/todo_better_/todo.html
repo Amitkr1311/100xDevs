@@ -1,0 +1,248 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            display: flex;
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+            height: 100vh;
+            /* Full viewport height */
+            margin: 0;
+        }
+
+        .todo-container {
+            background-color: #252526;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            width: 290px;
+        }
+
+        .todo-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #d4eaff;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #3c3c3c;
+            border-radius: 6px;
+            outline: none;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: red;
+            color: aliceblue;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .add-btn {
+            background-color: #007acc;
+        }
+
+        .add-btn:hover {
+            background-color: #04a52c;
+            transition: background-color 0.3s ease;
+        }
+
+        /* .act-btn { 
+            background-color: rgb(129, 129, 238);
+        }
+            
+
+        .act-btn:hover {
+            background-color: rgb(209, 6, 6);
+            transition: background-color 0.3s ease;
+        }
+        */
+
+        #todos {
+            margin-top: 20px;
+        }
+
+        #todos div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e1e1e;
+            padding: 4px,6px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            border: 1px solid #3c3c3c;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 16px;
+            margin: 0;
+            color: #d4d4d4;
+        }
+
+        .delete-btn {
+            background-color: #e51400;
+            font-size: 12px;
+            margin-right: 6px;
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background-color: #a80000;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-btn {
+            background-color: #ff9800;
+            font-size: 12px;
+            margin-right: 0px;
+            font-weight: bold;
+        }
+
+        .edit-btn:hover {
+            background-color: #e48b04;
+            transition: background-color 0.3s ease;
+        }
+
+        /* #todos div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        } */
+
+        #todos h1 {
+            flex: 1;
+            /* pushes buttons to the right */
+            margin: 0;
+        }
+
+        .complete-btn {
+            background-color: #28a745;
+            /* green */
+            font-size: 14px;
+            padding: 2px 6px;
+            /* smaller button size */
+            border-radius: 4px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 5px;
+        }
+
+        .complete-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="todo-container">
+        <h2>Todo List</h2>
+        <input type="text" placeholder="Enter Your Task..">
+        <button class="add-btn" onclick="addtodo()">Add Todo!</button>
+        <!-- <button class="act-btn" onclick="DeleteFirstTodo(todos)">Delete First Todo!</button> -->
+        <!-- <button class="act-btn"  onclick="DeleteLastTodo(todos)">Delete Last Todo!</button> -->
+        <div id="todos"></div>
+    </div>
+</body>
+<script>
+    let todos = [];
+    function addtodo() {
+        todos.push({
+            title: document.querySelector("input").value,
+            completed: false
+        });
+        render();
+    }
+
+    // function DeleteFirstTodo(todos) {
+    //     todos.splice(0, 1);
+    //     render();
+    // }
+
+    // function DeleteLastTodo(todos) {
+    //     todos.splice(todos.length - 1, 1);
+    //     render();
+    // }
+
+    function DeleteTodo(todos, index) {
+        todos.splice(index, 1);
+        render();
+    }
+
+    function EditTodo(index) {
+        const newTitle = prompt("Edit your todo:", todos[index].title);
+        if (newTitle !== null && newTitle.trim() !== "") {
+            todos[index].title = newTitle;
+            render();
+        }
+    }
+
+
+    function CreateTodoComponent(todo, index) {
+        const divEl = document.createElement("div");
+        const h1El = document.createElement("h1");
+        const completeBtn = document.createElement("button");
+        const btnEl = document.createElement("button");
+        const editEl = document.createElement("button");
+
+        h1El.innerHTML = todo.title;
+        if (todo.completed) {
+            h1El.style.textDecoration = "line-through";
+            h1El.style.opacity = "0.6";
+        }
+
+        // complete button
+        completeBtn.innerHTML = "✔";
+        completeBtn.classList.add("complete-btn");
+        completeBtn.onclick = function () {
+            todos[index].completed = !todos[index].completed;
+            render();
+        };
+
+        // delete button
+        btnEl.innerHTML = "Delete";
+        btnEl.classList.add("delete-btn");
+        btnEl.onclick = function () {
+            DeleteTodo(todos, index);
+        };
+
+        // edit button
+        editEl.innerHTML = "Edit";
+        editEl.classList.add("edit-btn");
+        editEl.onclick = function () {
+            EditTodo(index);
+        };
+
+        divEl.append(completeBtn);
+        divEl.append(h1El);
+        divEl.append(editEl);
+        divEl.append(btnEl);
+        return divEl;
+    }
+
+    function render() {
+        document.querySelector("#todos").innerHTML = "";
+        for (let i = 0; i < todos.length; i++) {
+            const element = CreateTodoComponent(todos[i], i);
+            document.querySelector("#todos").appendChild(element);
+        }
+    }
+</script>
+
+</html>

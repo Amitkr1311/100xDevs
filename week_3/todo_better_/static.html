@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width">
+	  <title>replit</title>
+	  <link href="style.css" rel="stylesheet" type="text/css" />
+	</head>
+	
+	<body>
+        <h1>To Do List</h1>
+        <div id="parenttodo">
+            <div id="todo-1" style="display: flex;">
+                <h4>1.Take Classes</h4>
+                <button onclick="deletetodo(1)">Delete</button>
+            </div>
+            <div id="todo-2" style="display: flex;">
+                <h4>2.Go out to eat</h4>
+                <button onclick="deletetodo(2)">Delete</button>
+            </div>
+        </div>
+        <div>
+	        <input type="text" placeholder="Add to todo list"></input>
+	        <button onclick="addtodo()">Add Todo</button>
+	    </div>
+
+	  <script src="script.js"></script>
+	</body>
+	
+</html>
