@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Todo FullStack</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+  </head>
+  <body>
+    <h2>Welcome To Your Todo</h2>
+    <div>
+      <button onclick="window.location.href='index_login.html'">Go to Login Page</button>
+    </div>
+
+    <div style="margin-top: 10px;">
+      <b>Signup</b><br>
+      <input id="signup_username" placeholder="Username" type="text"><br>
+      <input id="signup_password" placeholder="Password" type="password"><br>
+      <button onclick="signup()">Signup</button>
+    </div>
+
+    <script>
+      async function signup() {
+        const username = document.getElementById("signup_username").value;
+        const password = document.getElementById("signup_password").value;
+
+        try {
+          const res = await axios.post("/signup", { username, password });
+          alert(res.data.message);
+        } 
+        catch (error) {
+          //console.error(error);
+          alert("Signup failed");
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <title>Login - Todo FullStack</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+  </head>
+  <body style="background-color: rgb(34, 151, 172);">
+    <div id="welcome" style="display:none; font-weight:bold; font-size:18px; margin-bottom:10px;"></div>
+    <h2 id="l">Login to Your Account</h2>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+      <input id="login_username" placeholder="Username" type="text"><br>
+      <input id="login_password" placeholder="Password" type="password"><br>
+      <button onclick="login()">Login</button>
+    </div>
+
+    <hr>
+
+    <!-- Todo Section -->
+    <div id="todoSection" style="display:none;">
+      <h3>Your Tasks Today</h3>
+      <ul id="todoList"></ul>
+
+      <input id="newTodo" placeholder="New Todo">
+      <button onclick="addTodo()">Add Todo</button>
+    </div>
+
+    <script>
+      async function login() {
+        const username = document.getElementById("login_username").value;
+        const password = document.getElementById("login_password").value;
+
+        try {
+          const res = await axios.post("/login", { username, password });
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("username", username);
+          alert("Login successful");
+          //document.getElementById("todoSection").style.display = "block";
+          
+          document.getElementById("l").style.display = "none";
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("todoSection").style.display = "block";
+          document.getElementById("welcome").style.display = "block";
+          document.getElementById("welcome").innerText = `Welcome, ${username}!`;
+          fetchTodos();
+        } catch (error) {
+          console.error(error);
+          alert("Login failed");
+        }
+      }
+
+      async function fetchTodos() {
+        try {
+          const token = localStorage.getItem("token");
+          const res = await axios.get("/todos", { headers: { token } });
+          const todoList = document.getElementById("todoList");
+          todoList.innerHTML = "";
+          res.data.todos.forEach(todo => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              ${todo.title}
+              <button onclick="deleteTodo('${todo.id}')">Delete</button>
+              <button onclick="updateTodo('${todo.id}')">Update</button>
+            `;
+            todoList.appendChild(li);
+          });
+        } catch (error) {
+          console.error(error);
+          alert("Failed to fetch todos");
+        }
+      }
+
+      async function addTodo() {
+        try {
+          const token = localStorage.getItem("token");
+          const title = document.getElementById("newTodo").value;
+          await axios.post("/addtodos", { title }, { headers: { token } });
+          document.getElementById("newTodo").value = "";
+          fetchTodos();
+        } catch (error) {
+          console.error(error);
+          alert("Failed to add todo");
+        }
+      }
+
+      async function deleteTodo(id) {
+        try {
+          const token = localStorage.getItem("token");
+          await axios.delete(`/todos/${id}`, { headers: { token } });
+          fetchTodos();
+        } catch (error) {
+          console.error(error);
+          alert("Failed to delete todo");
+        }
+      }
+
+      async function updateTodo(id) {
+        const newTitle = prompt("Enter new title:");
+        if (!newTitle) return;
+        try {
+          const token = localStorage.getItem("token");
+          await axios.put(`/todos/${id}`, { title: newTitle }, { headers: { token } });
+          fetchTodos();
+        } catch (error) {
+          console.error(error);
+          alert("Failed to update todo");
+        }
+      }
+    </script>
+  </body>
+</html>
