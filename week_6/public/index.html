@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <TITle>Auth Website</TITle>
+    </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
+    <script>
+        async function signup(){
+            const username = document.getElementById("signup_username").value;
+            const password = document.getElementById("signup_password").value;
+
+            await axios.post("http://localhost:3000/signup",{
+                username: username,
+                password: password
+            });
+            document.getElementById("signup_username").value = "";
+            document.getElementById("signup_password").value = "";
+
+            alert("You are signed up");
+        }
+
+        async function signin(){
+            const username = document.getElementById("signin_username").value;
+            const password = document.getElementById("signin_password").value;
+
+            const response = await axios.post("http://localhost:3000/signin",{
+                username: username,
+                password: password
+            });
+
+            localStorage.setItem("token",response.data.token);
+            getuser_info();
+            document.getElementById("signin_username").value = "";
+            document.getElementById("signin_password").value = "";
+
+            alert("You are signed in");
+        }
+        
+        async function getuser_info() {
+            const response = await axios.get("http://localhost:3000/me", {
+                headers:{
+                    token:localStorage.getItem("token")
+                }
+            })
+            document.getElementById("information").innerHTML = "username: " + response.data.username + " password: " + response.data.password
+        }
+        //getuser_info();
+
+        function logout(){
+            localStorage.removeItem("token");
+            document.getElementById("information").innerHTML = ""; // Clear user info display
+            alert("You are logged out");
+        }
+
+    </script>
+    <body>
+        <div>
+             Signup
+            <input id="signup_username" type="text" name="username" placeholder="Username">
+            <input id="signup_password" type="text" name="password" placeholder="Password">
+            <button onclick="signup()">Submit</button>
+        </div>
+        <div>
+             Signin
+            <input id="signin_username" type="text" name="username" placeholder="Username">
+            <input id="signin_password" type="text" name="password" placeholder="Password">
+            <button onclick="signin()">Submit</button>
+        </div>
+        <div>
+            User Information:
+            <div id="information"></div>
+        </div>
+        <div>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </body>
+</html>
