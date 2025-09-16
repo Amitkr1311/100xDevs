@@ -118,39 +118,81 @@
 
 // Now unions and intersection in types
 
-type employee = {
-    name: string,
-    startdate: string
+// type employee = {
+//     name: string,
+//     startdate: string
+// }
+
+// type manager = {
+//     name: string,
+//     department: string
+// }
+
+
+// let e1:employee = {
+//     name: "amit",
+//     startdate: "01-04-2003"
+// }
+
+// let m1: manager = {
+//     name: "amit Kumar",
+//     department: "software"
+// }
+
+// let t1: teamLead = {
+//         name:"amitkr",
+//         startdate:"20-12-2001",
+//         department:"communication"
+//     }
+
+// type teamLead = employee | manager
+
+// function greet(user: teamLead) {
+//     console.log("hello " + user.name + '\n') // if we use age and startDate and department in | it will show error because it is not guarentee that teamLead will include it as name cauz name is in both type
+// }
+
+// greet(t1);
+// greet(e1);
+// greet(m1);
+
+
+// Arrays
+
+// let arr: number[] = [1,2,3,4,4];
+
+// function findMax(arr : number[]): number | undefined{
+//     if(arr.length === 0) return undefined;
+//     let max_number = arr[0];
+//     for(let i = 1;i < arr.length;i++) {
+//         if(arr[i] > max_number) {
+//             max_number = arr[i];
+//         }
+//     }
+//     return max_number;
+// }
+
+// console.log(findMax(arr));
+
+interface Users {
+    firstName: string,
+    lastName: string
+    age: number
 }
 
-type manager = {
-    name: string,
-    department: string
-}
-
-
-let e1:employee = {
-    name: "amit",
-    startdate: "01-04-2003"
-}
-
-let m1: manager = {
-    name: "amit Kumar",
-    department: "software"
-}
-
-let t1: teamLead = {
-        name:"amitkr",
-        startdate:"20-12-2001",
-        department:"communication"
+function filterUsers(users : Users[]) {
+    let ans = [];
+    for(let i = 0;i < users.length; i++) {
+        if(users[i].age > 18) {
+            ans.push(users[i]);
+        }
     }
-
-type teamLead = employee | manager
-
-function greet(user: teamLead) {
-    console.log("hello " + user.name + '\n') // if we use age and startDate and department in | it will show error because it is not guarentee that teamLead will include it as name cauz name is in both type
+    return ans;
 }
 
-greet(t1);
-greet(e1);
-greet(m1);
+const filteredUsers = filterUsers([{
+    firstName:"amit",
+    lastName:"kumar",
+    age:21
+}])
+
+console.log(filteredUsers);
